@@ -11,22 +11,47 @@ function App() {
     message: ''
   })
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0)
+  const [itemsPerView, setItemsPerView] = useState(3)
+
+  // Handle responsive carousel
+  useEffect(() => {
+    const updateItemsPerView = () => {
+      if (window.innerWidth < 768) {
+        setItemsPerView(1) // Mobile: 1 item
+      } else if (window.innerWidth < 1024) {
+        setItemsPerView(2) // Tablet: 2 items
+      } else {
+        setItemsPerView(3) // Desktop: 3 items
+      }
+    }
+
+    updateItemsPerView()
+    window.addEventListener('resize', updateItemsPerView)
+    return () => window.removeEventListener('resize', updateItemsPerView)
+  }, [])
 
   // Handle scroll effects
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
-      
+
       // Update active section based on scroll position
       const sections = ['home', 'skills', 'projects', 'contact']
-      const current = sections.find(section => {
-        const element = document.getElementById(section)
-        if (element) {
-          const rect = element.getBoundingClientRect()
-          return rect.top <= 100 && rect.bottom >= 100
+      let current = null
+      sections.forEach((section) => {
+        const el = document.getElementById(section)
+        if (!el) return
+
+        const rect = el.getBoundingClientRect()
+        if (rect.top <= 150) {
+          current = section
         }
-        return false
       })
+
+      // Special case: when user reaches bottom, force Contact active
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 10) {
+        current = 'contact'
+      }
       if (current) setActiveSection(current)
     }
 
@@ -39,7 +64,7 @@ function App() {
       alert('Please fill in all fields before sending.')
       return
     }
-    
+
     // Create Gmail web compose link with form data
     const email = 'prashant.siddhpura03@gmail.com'
     const subject = encodeURIComponent(`Portfolio Contact from ${formData.name}`)
@@ -58,7 +83,7 @@ ${formData.name}`)
     // Open Gmail web compose window
     const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`
     window.open(gmailUrl, '_blank')
-    
+
     // Reset form after sending
     setFormData({ name: '', email: '', message: '' })
     setShowContactForm(false)
@@ -77,7 +102,7 @@ ${formData.name}`)
     const email = 'prashant.siddhpura03@gmail.com'
     const subject = encodeURIComponent('Portfolio Inquiry')
     const body = encodeURIComponent('Hi Prashant,\n\nI found your portfolio and would like to discuss...')
-    
+
     // Open Gmail web compose window
     const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`
     window.open(gmailUrl, '_blank')
@@ -85,27 +110,33 @@ ${formData.name}`)
 
   // Handle GitHub links
   const handleGithubLink = (projectName = '') => {
-    const message = projectName ? 
-      `Opened GitHub for project: ${projectName}` : 
+    const message = projectName ?
+      `Opened GitHub for project: ${projectName}` :
       'Opened GitHub profile'
     console.log(message)
     window.open('https://github.com/prashant-siddhpura', '_blank')
   }
 
   const scrollToSection = (sectionId) => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+    const element = document.getElementById(sectionId)
+    if (!element) return
+
+    const yOffset = -90   // adjust to your navbar height
+    const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+
+    window.scrollTo({ top: y, behavior: 'smooth' })
   }
 
-  // Carousel navigation functions - shows 3 projects at a time
+  // Carousel navigation functions - responsive items per view
   const nextProject = () => {
-    const maxIndex = Math.max(0, projects.length - 3)
+    const maxIndex = Math.max(0, projects.length - itemsPerView)
     setCurrentProjectIndex((prevIndex) =>
       prevIndex >= maxIndex ? 0 : prevIndex + 1
     )
   }
 
   const prevProject = () => {
-    const maxIndex = Math.max(0, projects.length - 3)
+    const maxIndex = Math.max(0, projects.length - itemsPerView)
     setCurrentProjectIndex((prevIndex) =>
       prevIndex <= 0 ? maxIndex : prevIndex - 1
     )
@@ -125,7 +156,8 @@ ${formData.name}`)
     { name: "GitHub Actions", icon: GitBranch, color: "from-purple-500 to-purple-700" },
     { name: "OOPS", icon: Code, color: "from-purple-400 to-pink-500" },
     { name: "MySQL", icon: Database, color: "from-blue-600 to-indigo-700" },
-    { name: "PostgreSQL", icon: Database, color: "from-blue-700 to-purple-700" }
+    { name: "PostgreSQL", icon: Database, color: "from-blue-700 to-purple-700" },
+    { name: "MongoDB", icon: Database, color: "from-green-500 to-green-700" },
   ]
 
   const projects = [
@@ -165,9 +197,8 @@ ${formData.name}`)
       </div>
 
       {/* Navigation */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-slate-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
-      }`}>
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-slate-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
+        }`}>
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="text-2xl font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent drop-shadow-lg">
@@ -178,9 +209,8 @@ ${formData.name}`)
                 <button
                   key={item}
                   onClick={() => scrollToSection(item)}
-                  className={`capitalize transition-all duration-300 hover:text-cyan-300 text-white/90 font-medium ${
-                    activeSection === item ? 'text-cyan-300 border-b-2 border-cyan-300' : ''
-                  }`}
+                  className={`capitalize transition-all duration-300 hover:text-cyan-300 text-white/90 font-medium ${activeSection === item ? 'text-cyan-300 border-b-2 border-cyan-300' : ''
+                    }`}
                 >
                   {item}
                 </button>
@@ -201,24 +231,24 @@ ${formData.name}`)
               Aspiring Software Engineer
             </p>
             <p className="text-base md:text-lg text-gray-100 max-w-4xl mx-auto mb-12 leading-snug animate-fade-in-delay-2 drop-shadow-md">
-            With 6+ months of hands-on experience, I'm a Software Developer with strong skills in JavaScript, TypeScript, React, Node.js, Express.js, and database management. Experienced in building scalable backend APIs and full-stack applications. Additionally skilled in AWS, Docker, CI/CD pipelines, and Kubernetes, bringing a cloud-native mindset to modern development workflows.
+              With 6+ months of hands-on experience, I'm a Software Developer with strong skills in JavaScript, TypeScript, React, Node.js, Express.js, and database management. Experienced in building scalable backend APIs and full-stack applications. Additionally skilled in AWS, Docker, CI/CD pipelines, and Kubernetes, bringing a cloud-native mindset to modern development workflows.
             </p>
           </div>
-          
+
           <div className="flex justify-center space-x-6 mb-12 animate-fade-in-delay-3">
-            <a href="https://github.com/prashant-siddhpura" target="_blank" rel="noreferrer" 
-               className="p-3 bg-slate-800/50 backdrop-blur rounded-full hover:bg-slate-700/50 transition-all duration-300 hover:scale-110">
+            <a href="https://github.com/prashant-siddhpura" target="_blank" rel="noreferrer"
+              className="p-3 bg-slate-800/50 backdrop-blur rounded-full hover:bg-slate-700/50 transition-all duration-300 hover:scale-110">
               <Github size={24} />
             </a>
             <a href="https://linkedin.com/in/prashant-siddhpura" target="_blank" rel="noreferrer"
-               className="p-3 bg-slate-800/50 backdrop-blur rounded-full hover:bg-slate-700/50 transition-all duration-300 hover:scale-110">
+              className="p-3 bg-slate-800/50 backdrop-blur rounded-full hover:bg-slate-700/50 transition-all duration-300 hover:scale-110">
               <Linkedin size={24} />
             </a>
             <a
-               href="https://mail.google.com/mail/?view=cm&fs=1&to=prashant.siddhpura03@gmail.com&su=Portfolio Inquiry&body=Hi Prashant,%0D%0A%0D%0AI found your portfolio and would like to discuss..."
-               target="_blank"
-               rel="noreferrer"
-               className="p-3 bg-slate-800/50 backdrop-blur rounded-full hover:bg-slate-700/50 transition-all duration-300 hover:scale-110">
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=prashant.siddhpura03@gmail.com&su=Portfolio Inquiry&body=Hi Prashant,%0D%0A%0D%0AI found your portfolio and would like to discuss..."
+              target="_blank"
+              rel="noreferrer"
+              className="p-3 bg-slate-800/50 backdrop-blur rounded-full hover:bg-slate-700/50 transition-all duration-300 hover:scale-110">
               <Mail size={24} />
             </a>
           </div>
@@ -271,12 +301,14 @@ ${formData.name}`)
             <div className="overflow-hidden">
               <div
                 className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(-${currentProjectIndex * (100 / 3)}%)` }}
+                style={{ transform: `translateX(-${currentProjectIndex * (100 / itemsPerView)}%)` }}
               >
                 {projects.map((project, index) => (
                   <div
                     key={project.title}
-                    className="w-1/3 flex-shrink-0 px-4"
+                    className={`flex-shrink-0 px-4 ${itemsPerView === 1 ? 'w-full' :
+                      itemsPerView === 2 ? 'w-1/2' : 'w-1/3'
+                      }`}
                   >
                     <div className="group relative bg-slate-800/40 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden hover:border-cyan-500/50 transition-all duration-300 hover:scale-105 hover:shadow-xl h-full">
                       <div className={`h-1 bg-gradient-to-r ${project.gradient}`}></div>
@@ -334,15 +366,14 @@ ${formData.name}`)
 
             {/* Dots Indicator */}
             <div className="flex justify-center space-x-2 mt-8">
-              {Array.from({ length: Math.max(1, projects.length - 2) }, (_, index) => (
+              {Array.from({ length: Math.max(1, projects.length - itemsPerView + 1) }, (_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentProjectIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentProjectIndex
-                      ? 'bg-cyan-400 scale-125'
-                      : 'bg-slate-600 hover:bg-slate-500'
-                  }`}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentProjectIndex
+                    ? 'bg-cyan-400 scale-125'
+                    : 'bg-slate-600 hover:bg-slate-500'
+                    }`}
                   aria-label={`Go to project set ${index + 1}`}
                 />
               ))}
@@ -357,7 +388,7 @@ ${formData.name}`)
           <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent drop-shadow-lg">
             Get In Touch
           </h2>
-          
+
           {!showContactForm ? (
             <div className="text-center">
               <p className="text-xl text-white mb-8 max-w-2xl mx-auto drop-shadow-md">
