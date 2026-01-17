@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Mail, Github, Linkedin, ExternalLink, Code, Server, Database, Cloud, Monitor, GitBranch } from 'lucide-react'
+import { Mail, Github, Linkedin, ExternalLink, Code, Server, Database, Cloud, Monitor, GitBranch, ChevronLeft, ChevronRight } from 'lucide-react'
 
 function App() {
   const [activeSection, setActiveSection] = useState('home')
@@ -10,6 +10,7 @@ function App() {
     email: '',
     message: ''
   })
+  const [currentProjectIndex, setCurrentProjectIndex] = useState(0)
 
   // Handle scroll effects
   useEffect(() => {
@@ -95,6 +96,21 @@ ${formData.name}`)
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  // Carousel navigation functions - shows 3 projects at a time
+  const nextProject = () => {
+    const maxIndex = Math.max(0, projects.length - 3)
+    setCurrentProjectIndex((prevIndex) =>
+      prevIndex >= maxIndex ? 0 : prevIndex + 1
+    )
+  }
+
+  const prevProject = () => {
+    const maxIndex = Math.max(0, projects.length - 3)
+    setCurrentProjectIndex((prevIndex) =>
+      prevIndex <= 0 ? maxIndex : prevIndex - 1
+    )
+  }
+
   const skills = [
     { name: "JavaScript", icon: Code, color: "from-red-400 to-red-600" },
     { name: "TypeScript", icon: Code, color: "from-yellow-500 to-yellow-700" },
@@ -113,6 +129,12 @@ ${formData.name}`)
   ]
 
   const projects = [
+    {
+      title: "Todo Application",
+      description: "A production-ready Todo application built with React, TypeScript, Redux Toolkit, and Tailwind CSS. Features include task management with priorities, due dates, filtering, sorting, search functionality, and persistent storage.",
+      tech: ["React", "TypeScript", "Redux Toolkit", "Tailwind CSS"],
+      gradient: "from-cyan-500 to-blue-600"
+    },
     {
       title: "Kubernetes Project – Expense Tracker",
       description: "Containerized a 3-tier app, deployed on Kubernetes with HPA/VPA and integrated Prometheus & Grafana monitoring.",
@@ -243,45 +265,88 @@ ${formData.name}`)
           <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent drop-shadow-lg">
             Featured Projects
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
+
+          <div className="relative">
+            {/* Carousel Container */}
+            <div className="overflow-hidden">
               <div
-                key={project.title}
-                className="group relative bg-slate-800/40 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden hover:border-cyan-500/50 transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                style={{ animationDelay: `${index * 150}ms` }}
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${currentProjectIndex * (100 / 3)}%)` }}
               >
-                <div className={`h-2 bg-gradient-to-r ${project.gradient}`}></div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-3 group-hover:text-cyan-300 transition-colors duration-300 text-white">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-200 mb-4 leading-relaxed">
-                    {project.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-3 py-1 text-xs bg-slate-700/50 rounded-full border border-slate-600/50 text-gray-200"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      window.open('https://github.com/prashant-siddhpura', '_blank')
-                    }}
-                    className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-cyan-500/20 to-purple-600/20 rounded-lg border border-cyan-500/30 hover:from-cyan-500/30 hover:to-purple-600/30 transition-all duration-300 group-hover:scale-105 relative z-10"
+                {projects.map((project, index) => (
+                  <div
+                    key={project.title}
+                    className="w-1/3 flex-shrink-0 px-4"
                   >
-                    <span>View Code</span>
-                    <ExternalLink size={16} />
-                  </button>
-                </div>
-                <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none`}></div>
+                    <div className="group relative bg-slate-800/40 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden hover:border-cyan-500/50 transition-all duration-300 hover:scale-105 hover:shadow-xl h-full">
+                      <div className={`h-1 bg-gradient-to-r ${project.gradient}`}></div>
+                      <div className="p-4 h-full flex flex-col">
+                        <h3 className="text-lg font-bold mb-2 group-hover:text-cyan-300 transition-colors duration-300 text-white">
+                          {project.title}
+                        </h3>
+                        <p className="text-gray-300 mb-3 leading-relaxed text-sm flex-grow">
+                          {project.description}
+                        </p>
+                        <div className="flex flex-wrap gap-1 mb-4">
+                          {project.tech.map((tech) => (
+                            <span
+                              key={tech}
+                              className="px-2 py-0.5 text-xs bg-slate-700/50 rounded-full border border-slate-600/50 text-gray-300"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            window.open('https://github.com/prashant-siddhpura', '_blank')
+                          }}
+                          className="inline-flex items-center space-x-1 px-3 py-1.5 text-sm bg-gradient-to-r from-cyan-500/20 to-purple-600/20 rounded-lg border border-cyan-500/30 hover:from-cyan-500/30 hover:to-purple-600/30 transition-all duration-300 group-hover:scale-105 relative z-10"
+                        >
+                          <span>View Code</span>
+                          <ExternalLink size={14} />
+                        </button>
+                      </div>
+                      <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none`}></div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Navigation Arrows */}
+            <button
+              onClick={prevProject}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 rounded-full p-3 hover:bg-slate-700/80 hover:border-cyan-500/50 transition-all duration-300 hover:scale-110 group"
+              aria-label="Previous project"
+            >
+              <ChevronLeft size={24} className="text-white group-hover:text-cyan-300 transition-colors duration-300" />
+            </button>
+
+            <button
+              onClick={nextProject}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 rounded-full p-3 hover:bg-slate-700/80 hover:border-cyan-500/50 transition-all duration-300 hover:scale-110 group"
+              aria-label="Next project"
+            >
+              <ChevronRight size={24} className="text-white group-hover:text-cyan-300 transition-colors duration-300" />
+            </button>
+
+            {/* Dots Indicator */}
+            <div className="flex justify-center space-x-2 mt-8">
+              {Array.from({ length: Math.max(1, projects.length - 2) }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentProjectIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentProjectIndex
+                      ? 'bg-cyan-400 scale-125'
+                      : 'bg-slate-600 hover:bg-slate-500'
+                  }`}
+                  aria-label={`Go to project set ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
