@@ -162,28 +162,53 @@ ${formData.name}`)
 
   const projects = [
     {
+      title: "Authentication System Backend",
+      description: "A robust Authentication System built with Node.js, Express, and TypeScript. Provides secure user authentication using JWT, Passport.js (Google OAuth), and session management with Prisma ORM and PostgreSQL.",
+      tech: ["Node.js", "TypeScript", "Prisma", "PostgreSQL", "Google OAuth"],
+      gradient: "from-indigo-500 to-slate-700",
+      githubLink: "https://github.com/prashant-siddhpura/Authentication-System"
+    },
+    {
+      title: "Expense Tracker",
+      description: "A full-stack expense tracking application built with React (Vite), Express.js, and MySQL. Features include expense management, filtering, summaries, and RESTful API integration. Dockerized for seamless deployment.",
+      tech: ["React", "Express.js", "MySQL", "Docker"],
+      gradient: "from-emerald-400 to-green-600",
+      githubLink: "https://github.com/prashant-siddhpura/ExpenseTracker"
+    },
+    {
+      title: "Job Application Tracker (AI Automation)",
+      description: "An agent-driven Node.js automation system that scans Gmail for job application confirmation emails and automatically logs them into Google Sheets.",
+      tech: ["Node.js", "Gmail API", "Google Sheets API", "OAuth2"],
+      gradient: "from-orange-500 to-red-600",
+      githubLink: "https://github.com/prashant-siddhpura/JobApply-Log-Automation"
+    },
+    {
       title: "Todo Application",
       description: "A production-ready Todo application built with React, TypeScript, Redux Toolkit, and Tailwind CSS. Features include task management with priorities, due dates, filtering, sorting, search functionality, and persistent storage.",
       tech: ["React", "TypeScript", "Redux Toolkit", "Tailwind CSS"],
-      gradient: "from-cyan-500 to-blue-600"
+      gradient: "from-cyan-500 to-blue-600",
+      githubLink: "https://github.com/prashant-siddhpura/Todo-app"
     },
     {
       title: "Kubernetes Project – Expense Tracker",
       description: "Containerized a 3-tier app, deployed on Kubernetes with HPA/VPA and integrated Prometheus & Grafana monitoring.",
       tech: ["Kubernetes", "Docker", "Prometheus", "Grafana"],
-      gradient: "from-blue-500 to-purple-600"
+      gradient: "from-blue-500 to-purple-600",
+      githubLink: "https://github.com/prashant-siddhpura/ExpenseTracker"
     },
     {
       title: "CI Pipeline with Jenkins",
       description: "Automated CI pipeline with GitHub Webhook, SonarQube, OWASP & Trivy scans, and Dockerized deployment.",
       tech: ["Jenkins", "Docker", "SonarQube", "OWASP"],
-      gradient: "from-green-500 to-teal-600"
+      gradient: "from-green-500 to-teal-600",
+      githubLink: "https://github.com/prashant-siddhpura"
     },
     {
       title: "Kubernetes + ArgoCD",
       description: "Implemented GitOps-based deployments with ArgoCD, syncing apps automatically and monitoring resources via K8s Dashboard.",
       tech: ["ArgoCD", "Kubernetes", "GitOps"],
-      gradient: "from-purple-500 to-pink-600"
+      gradient: "from-purple-500 to-pink-600",
+      githubLink: "https://github.com/prashant-siddhpura"
     }
   ]
 
@@ -209,7 +234,7 @@ ${formData.name}`)
                 <button
                   key={item}
                   onClick={() => scrollToSection(item)}
-                  className={`capitalize transition-all duration-300 hover:text-cyan-300 text-white/90 font-medium ${activeSection === item ? 'text-cyan-300 border-b-2 border-cyan-300' : ''
+                  className={`cursor-pointer capitalize transition-all duration-300 hover:text-cyan-300 text-white/90 font-medium ${activeSection === item ? 'text-cyan-300 border-b-2 border-cyan-300' : ''
                     }`}
                 >
                   {item}
@@ -237,11 +262,11 @@ ${formData.name}`)
 
           <div className="flex justify-center space-x-6 mb-12 animate-fade-in-delay-3">
             <a href="https://github.com/prashant-siddhpura" target="_blank" rel="noreferrer"
-              className="p-3 bg-slate-800/50 backdrop-blur rounded-full hover:bg-slate-700/50 transition-all duration-300 hover:scale-110">
+              className="cursor-pointer p-3 bg-slate-800/50 backdrop-blur rounded-full hover:bg-slate-700/50 transition-all duration-300 hover:scale-110">
               <Github size={24} />
             </a>
             <a href="https://linkedin.com/in/prashant-siddhpura" target="_blank" rel="noreferrer"
-              className="p-3 bg-slate-800/50 backdrop-blur rounded-full hover:bg-slate-700/50 transition-all duration-300 hover:scale-110">
+              className="cursor-pointer p-3 bg-slate-800/50 backdrop-blur rounded-full hover:bg-slate-700/50 transition-all duration-300 hover:scale-110">
               <Linkedin size={24} />
             </a>
             <a
@@ -255,7 +280,7 @@ ${formData.name}`)
 
           <button
             onClick={() => scrollToSection('projects')}
-            className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold hover:from-cyan-600 hover:to-purple-700 transition-all duration-300 hover:scale-105 hover:shadow-xl animate-fade-in-delay-4"
+            className="cursor-pointer px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold hover:from-cyan-600 hover:to-purple-700 transition-all duration-300 hover:scale-105 hover:shadow-xl animate-fade-in-delay-4"
           >
             View My Work
           </button>
@@ -332,9 +357,9 @@ ${formData.name}`)
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
-                            window.open('https://github.com/prashant-siddhpura', '_blank')
+                            window.open(project.githubLink, '_blank')
                           }}
-                          className="inline-flex items-center space-x-1 px-3 py-1.5 text-sm bg-gradient-to-r from-cyan-500/20 to-purple-600/20 rounded-lg border border-cyan-500/30 hover:from-cyan-500/30 hover:to-purple-600/30 transition-all duration-300 group-hover:scale-105 relative z-10"
+                          className="cursor-pointer inline-flex items-center space-x-1 px-3 py-1.5 text-sm bg-gradient-to-r from-cyan-500/20 to-purple-600/20 rounded-lg border border-cyan-500/30 hover:from-cyan-500/30 hover:to-purple-600/30 transition-all duration-300 group-hover:scale-105 relative z-10"
                         >
                           <span>View Code</span>
                           <ExternalLink size={14} />
@@ -350,7 +375,7 @@ ${formData.name}`)
             {/* Navigation Arrows */}
             <button
               onClick={prevProject}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 rounded-full p-3 hover:bg-slate-700/80 hover:border-cyan-500/50 transition-all duration-300 hover:scale-110 group"
+              className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 rounded-full p-3 hover:bg-slate-700/80 hover:border-cyan-500/50 transition-all duration-300 hover:scale-110 group"
               aria-label="Previous project"
             >
               <ChevronLeft size={24} className="text-white group-hover:text-cyan-300 transition-colors duration-300" />
@@ -358,7 +383,7 @@ ${formData.name}`)
 
             <button
               onClick={nextProject}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 rounded-full p-3 hover:bg-slate-700/80 hover:border-cyan-500/50 transition-all duration-300 hover:scale-110 group"
+              className="cursor-pointer absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 rounded-full p-3 hover:bg-slate-700/80 hover:border-cyan-500/50 transition-all duration-300 hover:scale-110 group"
               aria-label="Next project"
             >
               <ChevronRight size={24} className="text-white group-hover:text-cyan-300 transition-colors duration-300" />
@@ -370,7 +395,7 @@ ${formData.name}`)
                 <button
                   key={index}
                   onClick={() => setCurrentProjectIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentProjectIndex
+                  className={`cursor-pointer w-3 h-3 rounded-full transition-all duration-300 ${index === currentProjectIndex
                     ? 'bg-cyan-400 scale-125'
                     : 'bg-slate-600 hover:bg-slate-500'
                     }`}
@@ -397,13 +422,13 @@ ${formData.name}`)
               <div className="flex justify-center space-x-4">
                 <button
                   onClick={() => setShowContactForm(true)}
-                  className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold hover:from-cyan-600 hover:to-purple-700 transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                  className="cursor-pointer px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold hover:from-cyan-600 hover:to-purple-700 transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 >
                   Send Message
                 </button>
                 <button
                   onClick={handleDirectEmail}
-                  className="px-8 py-4 bg-slate-800/50 backdrop-blur rounded-full font-semibold border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-300 hover:scale-105"
+                  className="cursor-pointer px-8 py-4 bg-slate-800/50 backdrop-blur rounded-full font-semibold border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-300 hover:scale-105"
                 >
                   Direct Email
                 </button>
@@ -451,13 +476,13 @@ ${formData.name}`)
                   <button
                     onClick={handleFormSubmit}
                     disabled={!formData.name || !formData.email || !formData.message}
-                    className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold hover:from-cyan-600 hover:to-purple-700 transition-all duration-300 hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="cursor-pointer px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold hover:from-cyan-600 hover:to-purple-700 transition-all duration-300 hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Send Message
                   </button>
                   <button
                     onClick={() => setShowContactForm(false)}
-                    className="px-8 py-4 bg-slate-800/50 backdrop-blur rounded-full font-semibold border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-300"
+                    className="cursor-pointer px-8 py-4 bg-slate-800/50 backdrop-blur rounded-full font-semibold border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-300"
                   >
                     Cancel
                   </button>
